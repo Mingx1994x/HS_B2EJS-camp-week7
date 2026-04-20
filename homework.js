@@ -25,6 +25,7 @@ const ADMIN_TOKEN = process.env.API_KEY;
 function formatOrderDate(timestamp) {
   // 請實作此函式
   // 提示：dayjs.unix(timestamp).format('YYYY/MM/DD HH:mm')
+  return dayjs.unix(timestamp).format('YYYY/MM/DD HH:mm')
 }
 
 /**
@@ -38,6 +39,9 @@ function getDaysAgo(timestamp) {
   // 1. 用 dayjs() 取得今天
   // 2. 用 dayjs.unix(timestamp) 取得訂單日期
   // 3. 用 .diff() 計算天數差異
+  const orderDate = dayjs.unix(timestamp);
+  const daysAgo = dayjs().diff(orderDate, 'day');
+  return daysAgo === 0 ? '今天' : `${daysAgo} 天前`
 }
 
 /**
@@ -47,6 +51,9 @@ function getDaysAgo(timestamp) {
  */
 function isOrderOverdue(timestamp) {
   // 請實作此函式
+  const orderDate = dayjs.unix(timestamp);
+  const daysAgo = dayjs().diff(orderDate, 'day');
+  return daysAgo > 7
 }
 
 /**
@@ -60,6 +67,18 @@ function getThisWeekOrders(orders) {
   // 1. 用 dayjs().startOf('week') 取得本週開始
   // 2. 用 dayjs().endOf('week') 取得本週結束
   // 3. 用 .isBefore() 和 .isAfter() 判斷
+  let thisWeekOrders = [];
+  const weekStartDate = dayjs().startOf('week');
+  const weekEndDate = dayjs().endOf('week');
+  thisWeekOrders = orders.filter(order => {
+    const { createdAt } = order;
+    const orderDate = dayjs.unix(createdAt);
+    const isBeforeEndDate = orderDate.isBefore(weekEndDate);
+    const isAfterEndDate = orderDate.isAfter(weekStartDate);
+    return isBeforeEndDate && isAfterEndDate
+  })
+
+  return thisWeekOrders
 }
 
 // ========================================
