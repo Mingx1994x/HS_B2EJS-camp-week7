@@ -193,6 +193,13 @@ async function getProductsWithAxios() {
   // 請實作此函式
   // 提示：axios.get() 會自動解析 JSON，不需要 .json()
   // 回傳 response.data.products
+  try {
+    const res = await axios.get(`${BASE_URL}/api/livejs/v1/customer/${API_PATH}/products`)
+
+    return res.data.products
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 /**
@@ -204,6 +211,18 @@ async function getProductsWithAxios() {
 async function addToCartWithAxios(productId, quantity) {
   // 請實作此函式
   // 提示：axios.post(url, data) 會自動設定 Content-Type
+  try {
+    const res = await axios.post(`${BASE_URL}/api/livejs/v1/customer/${API_PATH}/carts`, {
+      data: {
+        productId,
+        quantity
+      }
+    })
+    console.log('postCart', res)
+    return res.data
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 /**
@@ -213,16 +232,27 @@ async function addToCartWithAxios(productId, quantity) {
 async function getOrdersWithAxios() {
   // 請實作此函式
   // 提示：axios.get(url, { headers: { authorization: token } })
+  try {
+    const res = await axios.get(`${BASE_URL}/api/livejs/v1/admin/${API_PATH}/orders`, {
+      headers: {
+        authorization: ADMIN_TOKEN
+      }
+    })
+    return res.data.orders
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 /*
 比較題：請說明 fetch 和 axios 的主要差異
 
-1. ____________________________________
+1. fetch 屬瀏覽器原生 API，axios 則是第三方套件
 
-2. ____________________________________
+2. fetch 需手動解析 (res.json())，而 axios 已自動解析 JSON 數據並封裝在 data 中 (res.data)
 
-3. ____________________________________
+3. 錯誤處理中，fetch 不會進入 catch，需手動檢查 res.ok
+
 */
 
 // ========================================
