@@ -273,6 +273,16 @@ const OrderService = {
    */
   async fetchOrders() {
     // 請實作此函式
+    try {
+      const res = await axios.get(`${this.baseURL}/api/livejs/v1/admin/${this.apiPath}/orders`, {
+        headers: {
+          authorization: this.token
+        }
+      });
+      return res.data.orders
+    } catch (error) {
+      console.log(error);
+    }
   },
 
   /**
@@ -282,6 +292,13 @@ const OrderService = {
    */
   formatOrders(orders) {
     // 請實作此函式
+    let newOrders = [];
+    newOrders = orders.map(order => ({
+      ...order,
+      formattedDate: dayjs().format("YYYY-MM-DD")
+    }));
+
+    return newOrders
   },
 
   /**
@@ -291,6 +308,10 @@ const OrderService = {
    */
   filterUnpaidOrders(orders) {
     // 請實作此函式
+    let filterOrders = [];
+    filterOrders = orders.filter(order => !order.paid);
+
+    return filterOrders
   },
 
   /**
