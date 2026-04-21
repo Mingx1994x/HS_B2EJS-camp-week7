@@ -99,6 +99,29 @@ function getThisWeekOrders(orders) {
  */
 function validateOrderUser(data) {
   // 請實作此函式
+  let errors = [];
+  const { name, tel, email, address, payment } = data;
+  // 欄位 name 驗證
+  if (!name) errors.push('name 不可為空');
+
+  // 欄位 tel 驗證
+  const telReg = /^09\d{8}$/
+  if (!telReg.test(tel)) errors.push('tel 必須是 09 開頭的 10 位數字');
+
+  // 欄位 email 驗證
+  if (!email.includes('@')) errors.push('email 必須包含 @ 符號');
+
+  // 欄位 address 驗證
+  if (!address) errors.push('address 不可為空');
+
+  // 欄位 payment 驗證
+  const paymentApproach = ['ATM', 'Credit Card', 'Apple Pay'];
+  if (!paymentApproach.includes(payment)) errors.push("payment 必須是 'ATM', 'Credit Card', 'Apple Pay' 其中之一")
+
+  return {
+    isValid: errors.length === 0,
+    errors
+  }
 }
 
 /**
@@ -113,6 +136,22 @@ function validateOrderUser(data) {
  */
 function validateCartQuantity(quantity) {
   // 請實作此函式
+  if (!Number.isInteger(quantity)) return {
+    isValid: false,
+    error: '購物車數量必須是正整數'
+  }
+
+  if (quantity < 1) return {
+    isValid: false,
+    error: '購物車數量不可小於 1'
+  }
+
+  if (quantity > 99) return {
+    isValid: false,
+    error: '購物車數量不可大於 99'
+  }
+
+  return { isValid: true }
 }
 
 // ========================================
